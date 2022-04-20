@@ -2,6 +2,8 @@ DROP DATABASE IF EXISTS reviews_API;
 
 CREATE DATABASE reviews_API;
 
+\c reviews_API;
+
 DROP TABLE IF EXISTS reviews;
 
 CREATE TABLE reviews (
