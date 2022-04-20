@@ -78,3 +78,8 @@ const prod_reviewsSchema = mongoose.Schema({
   },
   },
 })
+
+module.exports = {
+  reviewsSchema,
+  prod_reviewsSchema,
+};
