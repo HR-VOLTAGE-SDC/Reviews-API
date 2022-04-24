@@ -7,7 +7,7 @@ CREATE DATABASE reviews_API;
 DROP TABLE IF EXISTS reviews CASCADE;
 
 CREATE TABLE reviews (
-id SERIAL PRIMARY KEY UNIQUE,
+rev_id SERIAL PRIMARY KEY UNIQUE,
 product_id INT NOT NULL,
 rating SMALLINT CONSTRAINT check_rating CHECK (rating > 0 AND rating < 6) NOT NULL,
 date BIGINT NOT NULL,
@@ -46,8 +46,8 @@ review_id INT NOT NULL,
 value SMALLINT CONSTRAINT check_char_rating CHECK (value > 0 AND value < 6)
 );
 
-ALTER TABLE photos ADD FOREIGN KEY (review_id) REFERENCES reviews(id);
+ALTER TABLE photos ADD FOREIGN KEY (review_id) REFERENCES reviews(rev_id);
 
-ALTER TABLE characteristics_reviews ADD FOREIGN KEY (review_id) REFERENCES reviews(id);
+ALTER TABLE characteristics_reviews ADD FOREIGN KEY (review_id) REFERENCES reviews(rev_id);
 
 ALTER TABLE characteristics_reviews ADD FOREIGN KEY (characteristic_id) REFERENCES characteristics(id);
