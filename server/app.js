@@ -20,9 +20,11 @@ app.put('/reviews/:review_id/helpful', controllers.helpfulReview);
 app.put('/reviews/:review_id/report', controllers.reportReview);
 
 //serve client
-app.use(express.static('public'));
+// app.use(express.static());
 
 //run server
-app.listen(PORT, ()=> console.log(`Reviews Server listening at port: ${PORT}`));
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, ()=> console.log(`Reviews Server listening at port: ${PORT}`));
+}
 
 module.exports = app;
