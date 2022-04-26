@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --forceExit",
-    "server-dev": "npx nodemon --watch server server/app.js"
+    "server-dev": "npx nodemon --watch server server/app.js",
+    "k6-rev-load": "k6 run ./k6/rev-load.js",
+    "k6-meta-load": "k6 run ./k6/meta-load.js",
+    "k6-rev-stress": "k6 run ./k6/rev-stress.js",
+    "k6-meta-stress": "k6 run ./k6/meta-stress.js"
   },
   "repository": {
     "type": "git",
