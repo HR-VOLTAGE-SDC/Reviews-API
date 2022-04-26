@@ -119,10 +119,10 @@ describe('GET /reviews/meta', function () {
 })
 
 describe('POST /reviews', function () {
-  it('should be able to successfully post a review', () => {
+  it('should be able to successfully post a review for the correct product_id', () => {
     request(app)
-    .get('/reviews')
-    .query({product_id: 15})
+    .post('/reviews')
+    .body({product_id: 15})
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(201, done);

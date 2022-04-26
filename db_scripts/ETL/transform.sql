@@ -15,16 +15,10 @@ ALTER TABLE reviews_data DROP rev_id;
 
 DROP TABLE IF EXISTS characteristics_data;
 
-CREATE TABLE characteristics_data as SELECT characteristics_reviews.id,  characteristics.product_id,characteristics_reviews.characteristic_id, characteristics_reviews.review_id, characteristics.name, characteristics_reviews.value FROM characteristics INNER JOIN characteristics_reviews on characteristics.id = characteristics_reviews.characteristic_id ORDER BY characteristics_reviews.id;
+CREATE TABLE characteristics_data AS SELECT c.characteristic_id, c.product_id, c.name, r.review_id, r.value
+FROM (SELECT generate_series(min(id), max(id))::BIGINT AS characteristic_id, product_id, name FROM characteristics GROUP BY product_id, name) c LEFT JOIN characteristics_reviews r ON c.characteristic_id = r.characteristic_id ORDER BY c.product_id;
 
-ALTER TABLE characteristics_data DROP id;
 ALTER TABLE characteristics_data ADD id BIGSERIAL PRIMARY KEY UNIQUE;
-
-DROP TABLE IF EXISTS photos CASCADE;
-DROP TABLE IF EXISTS characteristics CASCADE;
-DROP TABLE IF EXISTS characteristics_reviews CASCADE;
-DROP TABLE IF EXISTS reviews CASCADE;
-DROP TABLE IF EXISTS photos_data;
 
 ALTER TABLE characteristics_data ADD FOREIGN KEY (review_id) REFERENCES reviews_data(id);
 
@@ -34,5 +28,10 @@ ALTER TABLE reviews_data ALTER response SET DEFAULT null;
 
 ALTER TABLE reviews_data ALTER helpfulness SET DEFAULT 0;
 
--- should leave me with exactly two tables!
--- update would not work for me whatsoever...
+ALTER TABLE reviews_data ALTER photos SET DEFAULT '[]';
+
+-- DROP TABLE IF EXISTS photos CASCADE;
+-- DROP TABLE IF EXISTS characteristics CASCADE;
+-- DROP TABLE IF EXISTS characteristics_reviews CASCADE;
+-- DROP TABLE IF EXISTS reviews CASCADE;
+-- DROP TABLE IF EXISTS photos_data;

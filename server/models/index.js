@@ -44,7 +44,7 @@ module.exports = {
     return pool.query(text)
       .catch((err) => console.log(err, 'err getting meta data'))
   },
-  postReview: (req, res) => {
+  postReview: (req) => {
     const product_id = req.product_id;
     const rating = req.rating;
     const summary = req.summary;
@@ -52,37 +52,42 @@ module.exports = {
     const recommend = req.recommend;
     const name = req.name;
     const email = req.email;
-    const photos = req.photos ? req.photos : '';
-
+    const photos = req.photos.length > 0 ? req.photos : null;
     let photoset = [];
-    if (photos.length > 0) {
+    let text;
+
+    if (photos) {
       photos.forEach((photo) => {
         photoset.push({ url: photo });
       });
-      const text = format(`INSERT INTO reviews_data (product_id, rating, date, summary, body, recommend, reviewer_name, reviewer_email, photos) VALUES (%L, %L, NOW() AT TIME ZONE 'UTC', %L, %L, %L, %L, %L, %L) RETURNING id AS review_id`, product_id, rating, summary, body, recommend, name, email, photoset);
-      return pool.query(text)
-        .then((data) => {
-          if (req.characteristics) {
-            for (let key in req.characteristics) {
-              let textz = format(`INSERT INTO characteristics_data (product_id, characteristic_id, review_id, name, value) VALUES (%L, %L, %L, (SELECT name FROM characteristics_data WHERE characteristics_data.characteristic_id = %L AND characteristics_data.product_id = %L LIMIT 1), %L)`, product_id, key, data.rows[0].review_id, key, product_id, req.characteristics[key]);
-              pool.query(textz)
-                .catch((err) => console.log(err, 'err posting chars'))
-            }
-          }
-        })
-        .catch((err) => console.log(err, 'err posting review'))
+      text = format(`INSERT INTO reviews_data (product_id, rating, date, summary, body, recommend, reviewer_name, reviewer_email, photos) VALUES (%L, %L, NOW() AT TIME ZONE 'UTC', %L, %L, %L, %L, %L, %L) RETURNING id AS review_id`, product_id, rating, summary, body, recommend, name, email, photoset);
+    } else {
+      text = format(`INSERT INTO reviews_data (product_id, rating, date, summary, body, recommend, reviewer_name, reviewer_email) VALUES (%L, %L, NOW() AT TIME ZONE 'UTC', %L, %L, %L, %L, %L) RETURNING id AS review_id`, product_id, rating, summary, body, recommend, name, email);
     }
+
+    return pool.query(text)
+      .then((data) => {
+        if (req.characteristics) {
+          for (let key in req.characteristics) {
+            let textz = format(`INSERT INTO characteristics_data (product_id, characteristic_id, review_id, name, value) VALUES (%L, %L, %L, (SELECT name FROM characteristics_data WHERE characteristics_data.characteristic_id = %L AND characteristics_data.product_id = %L LIMIT 1), %L)`, product_id, key, data.rows[0].review_id, key, product_id, req.characteristics[key]);
+
+            pool.query(textz)
+              .catch((err) => console.log(err, 'err posting chars'))
+          }
+        }
+      })
+      .catch((err) => console.log(err, 'err posting review'))
   },
   reportReview: (req, res) => {
     const review_id = req.review_id;
     const text = format(`UPDATE reviews_data SET reported = true WHERE id = %L`, review_id);
     return pool.query(text)
-    .catch((err) => console.log(err, 'err reporting'))
+      .catch((err) => console.log(err, 'err reporting'))
   },
   helpfulReview: (req, res) => {
     const review_id = req.review_id;
     const text = format(`UPDATE reviews_data SET helpfulness = helpfulness+1 WHERE id = %L`, review_id);
     return pool.query(text)
-    .catch((err) => console.log(err, 'err updating helpfulness'))
+      .catch((err) => console.log(err, 'err updating helpfulness'))
   },
 };
