@@ -1,4 +1,3 @@
-require('dotenv').config();
 const models = require('../models/index.js');
 
 module.exports = {
@@ -24,12 +23,12 @@ module.exports = {
   },
   helpfulReview: (req, res) => {
     models.helpfulReview(req.params)
-    .then((data) => res.sendStatus(200))
+    .then((data) => res.sendStatus(204))
     .catch((err) => res.sendStatus(500))
   },
   reportReview: (req, res) => {
     models.reportReview(req.params)
-    .then((data) => res.sendStatus(200))
+    .then((data) => res.sendStatus(204))
     .catch((err) => res.sendStatus(500))
   },
 };

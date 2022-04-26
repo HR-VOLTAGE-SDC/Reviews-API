@@ -119,34 +119,45 @@ describe('GET /reviews/meta', function () {
 })
 
 describe('POST /reviews', function () {
-  it('should be able to successfully post a review for the correct product_id', () => {
+  it('should be able to successfully post a review for a product_id', () => {
     request(app)
     .post('/reviews')
-    .body({product_id: 15})
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
-    .expect(201, done);
+    .send({
+      product_id: "15",
+      rating: 5,
+      summary: "This is a DOOZY!",
+      body: "J QUERY? what are you 5? We use JJQUERY!",
+      recommend: true,
+      name: "SWE",
+      email: "hehe@gmail.com",
+      photos: [],
+      characteristics: {
+          51: 4,
+          52: 3,
+          53: 4,
+          54: 2
+      }
+  })
+    .expect(201);
   })
 })
 
-// describe('PUT /reviews/:review_id/helpful', function () {
-//   it('', () => {
-//     request(app)
-//     .get('/reviews')
-//     .query({product_id: 11})
-//     .set('Accept', 'application/json')
-//     .expect('Content-Type', /json/)
-//     .expect(200, done);
-//   })
-// })
+describe('PUT /reviews/:review_id/helpful', function () {
+  it('should be able to mark review as helpful', () => {
+    request(app)
+    .put('/reviews/:review_id/helpful')
+    .send({review_id: 34})
+    .expect(204);
+  })
+})
 
-// describe('PUT /reviews/:review_id/report', function () {
-//   it('', () => {
-//     request(app)
-//     .get('/reviews')
-//     .query({product_id: 11})
-//     .set('Accept', 'application/json')
-//     .expect('Content-Type', /json/)
-//     .expect(200, done);
-//   })
-// })
+describe('PUT /reviews/:review_id/report', function () {
+  it('should be able to report review', () => {
+    request(app)
+    .get('/reviews/:review_id/report')
+    .query({review_id: 34})
+    .expect(204);
+  })
+})
