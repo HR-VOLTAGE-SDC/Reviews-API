@@ -17,7 +17,6 @@ export const options = {
     { duration: '60s', target: 0 }
   ],
 };
-
 //load test setup
 export default function () {
   let id = Math.floor(Math.random()*99999);
