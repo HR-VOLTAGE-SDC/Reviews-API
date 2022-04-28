@@ -41,6 +41,20 @@ module.exports = {
           FROM characteristics_data WHERE product_id = %L GROUP BY  name, characteristic_id) AS char)
     )`, product_id, product_id, product_id, product_id)
 
+    // const text = format(`WITH metadata AS (SELECT rating, recommend FROM reviews_data WHERE product_id = %L) SELECT JSON_BUILD_OBJECT(
+    //   'product_id', %L,
+    //   'ratings', (SELECT JSON_OBJECT_AGG(rating, rating_data)
+    //     FROM (SELECT rating, count(*) AS rating_data FROM metadata GROUP BY rating) AS rate),
+    //   'recommended', (SELECT JSON_OBJECT_AGG(recommend, rec_data)
+    //     FROM (SELECT recommend, count(*) AS rec_data FROM metadata GROUP BY recommend) AS rec),
+    //   'characteristics', (SELECT JSON_OBJECT_AGG(name, JSON_BUILD_OBJECT(
+    //           'id', characteristic_id,
+    //           'value', value
+    //     ))
+    //     FROM (SELECT name, characteristic_id, sum(value)/count(*) AS value
+    //       FROM characteristics_data WHERE product_id = %L GROUP BY  name, characteristic_id) AS char)
+    // )`, product_id, product_id, product_id)
+
     return pool.query(text)
       .catch((err) => console.log(err, 'err getting meta data'))
   },

@@ -30,8 +30,8 @@ ALTER TABLE reviews_data ALTER helpfulness SET DEFAULT 0;
 
 ALTER TABLE reviews_data ALTER photos SET DEFAULT '[]';
 
--- DROP TABLE IF EXISTS photos CASCADE;
--- DROP TABLE IF EXISTS characteristics CASCADE;
--- DROP TABLE IF EXISTS characteristics_reviews CASCADE;
--- DROP TABLE IF EXISTS reviews CASCADE;
--- DROP TABLE IF EXISTS photos_data;
+DROP TABLE IF EXISTS photos CASCADE;
+DROP TABLE IF EXISTS characteristics CASCADE;
+DROP TABLE IF EXISTS characteristics_reviews CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS photos_data;
